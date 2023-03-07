@@ -2,6 +2,8 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 import api from "./blogAPI";
 
+import { fetchRelatedBlogs } from "../related-blogs/relatedBlogsSlice";
+
 const initialState = {
   blog: {},
   isLoading: false,
@@ -9,10 +11,17 @@ const initialState = {
   error: "",
 };
 
-export const fetchBlog = createAsyncThunk("blog/fetchBlog", async (id) => {
-  const blogs = await api.fetchBlog(id);
-  return blogs;
-});
+export const fetchBlog = createAsyncThunk(
+  "blog/fetchBlog",
+  async (id, thunkAPI) => {
+    const blogs = await api.fetchBlog(id);
+    const tags = await blogs.tags;
+
+    thunkAPI.dispatch(fetchRelatedBlogs({ id, tags }));
+
+    return blogs;
+  }
+);
 
 export const updateBlog = createAsyncThunk(
   "blog/updateBlog",
@@ -29,6 +38,7 @@ const blogSlice = createSlice({
     builder
       .addCase(fetchBlog.pending, (state, action) => {
         state.isLoading = true;
+        state.blog = {};
         state.isError = false;
         state.error = "";
       })

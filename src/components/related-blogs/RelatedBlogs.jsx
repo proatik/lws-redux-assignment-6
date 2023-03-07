@@ -1,9 +1,12 @@
 import { useSelector } from "react-redux";
 
+import Message from "../ui/Message";
 import RelatedBlogItem from "./RelatedBlogItem";
 
 const RelatedBlogs = () => {
-  const { blogs } = useSelector((state) => state.relatedBlogs);
+  const { isLoading, blogs, isError, error } = useSelector(
+    (state) => state.relatedBlogs
+  );
 
   return (
     <aside>
@@ -11,9 +14,16 @@ const RelatedBlogs = () => {
         Related Posts
       </h4>
       <div className="space-y-4 related-post-container">
-        {blogs.map((blog) => (
-          <RelatedBlogItem key={blog.id} blog={blog} />
-        ))}
+        {isLoading && <Message>Loading...</Message>}
+        {isError && <Message>{error}</Message>}
+
+        {!isLoading && !isError && !blogs.length && (
+          <Message> No Related Blog Found</Message>
+        )}
+
+        {!isLoading &&
+          !isError &&
+          blogs.map((blog) => <RelatedBlogItem key={blog.id} blog={blog} />)}
       </div>
     </aside>
   );

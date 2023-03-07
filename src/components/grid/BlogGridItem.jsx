@@ -20,7 +20,7 @@ const BlogGridItem = ({ blog }) => {
           {title}
         </Link>
         <div className="lws-tags">
-          {tags.map((tag) => (
+          {tags?.map((tag) => (
             <span key={tag}> #{tag}</span>
           ))}
         </div>
