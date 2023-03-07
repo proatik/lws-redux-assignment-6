@@ -33,7 +33,7 @@ const DetailedBlog = () => {
       {isLoading && <Message>Loading...</Message>}
       {isError && <Message>{error}</Message>}
 
-      {!isLoading && isError && !Object.keys(blog).length && (
+      {!isLoading && !isError && !Object.keys(blog).length && (
         <Message> No Blog Found</Message>
       )}
 
